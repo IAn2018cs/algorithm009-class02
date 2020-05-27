@@ -1,15 +1,15 @@
 # Week01 学习笔记
 
-## 学习算法方法
+## 1 学习算法方法
 
-### 课程学习流程
+### 1.1 课程学习流程
 
 * 课前预习，把ppt先过一遍
 * 倍速看视频，不懂的地方暂停反复看
 * 做课后练习题，刻意练习
 * 构建自己的知识图谱，逐渐完善
 
-### 做题流程 五毒神掌
+### 1.2 做题流程 五毒神掌
 
 * 5分钟看题，不要着急做，先理解题目
 * 10分钟内想不出来，看题解，理解别人的代码
@@ -19,19 +19,19 @@
 * 一天后，一周后再来做一遍，忘记了就再重复一遍上面的流程，直到不看题解就能做出来
 * 面试前集中过一遍
 
-### 数据结构与算法脑图
+### 1.3 数据结构与算法脑图
 
 ![数据结构与算法脑图](https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_01/数据结构与算法.png)
 
-## 编程习惯
+## 2 编程习惯
 
 * 设置好最适合自己的编程环境
 * 摒弃之前的坏习惯
 * 自顶向下的编程方式，结构清晰
 
-## 复杂度分析
+## 3 复杂度分析
 
-### 时间复杂度
+### 3.1 时间复杂度
 
 只看最高的复杂度
 
@@ -44,16 +44,16 @@
 * O(2^n) 指数级别，如斐波拉契递归
 * O(n!) 阶乘
 
-### 空间复杂度
+### 3.2 空间复杂度
 
 有没有额外申请空间，原地操作为O(1)
 
 * 数组的长度
 * 递归的深度
 
-## 数组、链表、跳表
+## 4 数组、链表、跳表
 
-### 数组
+### 4.1 数组
 
 * 随机访问，O(1)时间复杂度
 * 插入删除，O(n)时间复杂度 (涉及到元素的搬移)
@@ -62,7 +62,7 @@ Java中的ArrayList就是对数组的封装，默认数组大小是10，
 每次插入都会进行元素的copy，
 如果大小不够，就会进行扩容，申请一个当前大小二倍的空间，再把当前元素copy过去。
 
-### 链表
+### 4.2 链表
 
 * 查找，O(n)时间复杂度
 * 插入删除，O(1)时间复杂度
@@ -79,7 +79,7 @@ Java中的LinkList使用双向链表来实现
 1. `node.pre.next = node.next`
 2. `node.next = null`
 
-### 跳表
+### 4.3 跳表
 
 * 插入删除查找，O(log n)时间复杂度
 
@@ -91,9 +91,9 @@ Java中的LinkList使用双向链表来实现
 
 实际应用有：Redis、LevelDB等
 
-## 栈、队列、双端队列、优先队列
+## 5 栈、队列、双端队列、优先队列
 
-### 栈
+### 5.1 栈
 
 * 后进先出
 * 添加删除，O(1)时间复杂度
@@ -104,7 +104,7 @@ Java中`Stack`的API，其内部通过数组实现
 * `push(e)` 入栈
 * `search(e)` 搜索栈内元素，返回该元素在栈内的深度，即下标+1
 
-### 队列
+### 5.2 队列
 
 * 先进先出
 * 添加删除，O(1)时间复杂度
@@ -117,7 +117,7 @@ Java中的`Queue`是一个接口，他的实现有好多种，如`LinkedList`，
 `remove()` | `poll()` | 出队
 `element()` | `peek()` | 查看队首元素
 
-### 双端队列
+### 5.3 双端队列
 
 * 两端都可以进出的队列
 * 添加删除，O(1)时间复杂度
@@ -133,7 +133,7 @@ Java中的`Deque`也是一个接口，他继承了`Queue`
 `removeFirst()` | `pollFirst()` | 删除队首元素
 `removeLast()` | `pollLast()` | 删除队尾元素
 
-### 优先队列
+### 5.4 优先队列
 
 * 可以按优先级出队
 * 插入，O(1)时间复杂度
@@ -143,9 +143,9 @@ Java中的`Deque`也是一个接口，他继承了`Queue`
 Java中的是`PriorityQueue`，继承`AbstractQueue`，最终实现了`Queue`
 
 
-## 本周作业
+## 6 本周作业
 
-### 用 add first 或 add last 这套新的 API 改写 Deque 的代码
+### 6.1 用 add first 或 add last 这套新的 API 改写 Deque 的代码
 
 ```
 Deque<String> deque = new LinkedList<>();
@@ -183,9 +183,9 @@ while (deque.size() > 0) {
 System.out.println(deque);
 ```
 
-### 分析 Queue 和 Priority Queue 的源码
+### 6.2 分析 Queue 和 Priority Queue 的源码
 
-#### Queue
+#### 6.2 .1 Queue
 
 Java中的`Queue`是一个接口，继承了`Collection`接口
 
@@ -210,7 +210,7 @@ E element();
 E peek();
 ```
 
-#### Priority Queue
+#### 6.2.2 Priority Queue
 
 Java中的`PriorityQueue`继承了`AbstractQueue`，类关系图如下：
 
@@ -220,7 +220,7 @@ Java中的`PriorityQueue`继承了`AbstractQueue`，类关系图如下：
 
 * 入队`offer(e)`
 
-```
+```java
 public boolean offer(E e) {
     if (e == null)
         throw new NullPointerException();
@@ -289,7 +289,7 @@ private static <T> void siftUpUsingComparator(int k, T x, Object[] es, Comparato
 
 * 出队`poll()`
 
-```
+```java
 public E poll() {
     final Object[] es;
     final E result;
