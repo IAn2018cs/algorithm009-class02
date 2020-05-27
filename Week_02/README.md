@@ -44,100 +44,106 @@ Java中的`HashSet`内部是基于`HashMap`实现的，每次存的value是一�
 * `put(K key, V value)` 存数据
 
 ```java
-public V put(K key, V value) {
-    // 先通过hash函数算出key对应的hash值
-    return putVal(hash(key), key, value, false, true);
-}
+    public V put(K key, V value) {
+        // 先通过hash函数算出key对应的hash值
+        return putVal(hash(key), key, value, false, true);
+    }
 
-// 优化后的hash函数，扰动函数，防止不同的hashCode的高位不同但低位相同导致的hash冲突
-static final int hash(Object key) {
-    int h;
-    return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
-}
+    // 优化后的hash函数，扰动函数，防止不同的hashCode的高位不同但低位相同导致的hash冲突
+    static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
 
-final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
-    Node<K,V>[] tab; Node<K,V> p; int n, i;
-		// 如果当前表为空则进行初始化 默认初始大小为1 << 4 = 16，扩容因子：0.75f
-    if ((tab = table) == null || (n = tab.length) == 0)
-				n = (tab = resize()).length;
-  	// 得到要插入的位置，为null说明没有冲突，直接插入
-		if ((p = tab[i = (n - 1) & hash]) == null)
-				tab[i] = newNode(hash, key, value, null);
-		else {
-				Node<K,V> e; K k;
-      	// 如果key存在，就直接覆盖value
-				if (p.hash == hash && ((k = p.key) == key || (key != null && key.equals(k))))
-            e = p;
-      	// 判断是否为红黑树
-				else if (p instanceof TreeNode)
-						e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
-				else {
-          	// 链表
-						for (int binCount = 0; ; ++binCount) {
-								if ((e = p.next) == null) {
-                  	// 如果e下一个节点为空，赋值给下一个节点
-										p.next = newNode(hash, key, value, null);
-										if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
-                      	// 当链表长度大于8，改成红黑树
-												treeifyBin(tab, hash);
-										break;
-								}
-              	// key相同 跳出循环
-								if (e.hash == hash && ((k = e.key) == key || (key != null && key.equals(k))))
-                    break;
-                p = e;
+    final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
+        Node<K, V>[] tab;
+        Node<K, V> p;
+        int n, i;
+        // 如果当前表为空则进行初始化 默认初始大小为1 << 4 = 16，扩容因子：0.75f
+        if ((tab = table) == null || (n = tab.length) == 0)
+            n = (tab = resize()).length;
+        // 得到要插入的位置，为null说明没有冲突，直接插入
+        if ((p = tab[i = (n - 1) & hash]) == null)
+            tab[i] = newNode(hash, key, value, null);
+        else {
+            Node<K, V> e;
+            K k;
+            // 如果key存在，就直接覆盖value
+            if (p.hash == hash && ((k = p.key) == key || (key != null && key.equals(k))))
+                e = p;
+                // 判断是否为红黑树
+            else if (p instanceof TreeNode)
+                e = ((TreeNode<K, V>) p).putTreeVal(this, tab, hash, key, value);
+            else {
+                // 链表
+                for (int binCount = 0; ; ++binCount) {
+                    if ((e = p.next) == null) {
+                        // 如果e下一个节点为空，赋值给下一个节点
+                        p.next = newNode(hash, key, value, null);
+                        if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                            // 当链表长度大于8，改成红黑树
+                            treeifyBin(tab, hash);
+                        break;
+                    }
+                    // key相同 跳出循环
+                    if (e.hash == hash && ((k = e.key) == key || (key != null && key.equals(k))))
+                        break;
+                    p = e;
+                }
+            }
+            if (e != null) { // existing mapping for key
+                V oldValue = e.value;
+                // 根据规则选择是否覆盖value
+                if (!onlyIfAbsent || oldValue == null)
+                    e.value = value;
+                afterNodeAccess(e);
+                return oldValue;
             }
         }
-        if (e != null) { // existing mapping for key
-            V oldValue = e.value;
-          	// 根据规则选择是否覆盖value
-            if (!onlyIfAbsent || oldValue == null)
-                e.value = value;
-            afterNodeAccess(e);
-            return oldValue;
-        }
+        ++modCount;
+        // 判断是否需要扩容
+        if (++size > threshold)
+            resize();
+        afterNodeInsertion(evict);
+        return null;
     }
-    ++modCount;
-  	// 判断是否需要扩容
-    if (++size > threshold)
-        resize();
-    afterNodeInsertion(evict);
-    return null;
-}
 ```
 
 * `get(Object key)` 取数据
 
 ```java
-public V get(Object key) {
-		Node<K,V> e;
-	  // 根据key及其hash值查询node节点，如果存在，则返回该节点的value值
-		return (e = getNode(hash(key), key)) == null ? null : e.value;
-}
+    public V get(Object key) {
+        Node<K, V> e;
+        // 根据key及其hash值查询node节点，如果存在，则返回该节点的value值
+        return (e = getNode(hash(key), key)) == null ? null : e.value;
+    }
 
-// 根据key搜索节点的方法。判断key相等的条件：hash值相同并且equals()相等
-final Node<K,V> getNode(int hash, Object key) {
-		Node<K,V>[] tab; Node<K,V> first, e; int n; K k;
-    // 根据输入的hash值，可以直接计算出对应的下标，如果存在结果，则必定在table的这个位置上
-		if ((tab = table) != null && (n = tab.length) > 0 && (first = tab[(n - 1) & hash]) != null) {
-      	// 判断第一个存在的节点的key是否和查询的key相等。如果相等，直接返回该节点
-				if (first.hash == hash && // always check first node
-						((k = first.key) == key || (key != null && key.equals(k))))
-						return first;
-      	// 遍历该链表或红黑树直到next为null
-				if ((e = first.next) != null) {
-            // 为红黑树结构时，遍历红黑树节点，查看是否有匹配的TreeNode
-						if (first instanceof TreeNode)
-								return ((TreeNode<K,V>)first).getTreeNode(hash, key);
-						do {
-                // 为链表结构时，遍历链表，判断key是否相同
-								if (e.hash == hash && ((k = e.key) == key || (key != null && key.equals(k))))
-										return e;
-						} while ((e = e.next) != null);
-				}
-		}
-		return null;
-}
+    // 根据key搜索节点的方法。判断key相等的条件：hash值相同并且equals()相等
+    final Node<K, V> getNode(int hash, Object key) {
+        Node<K, V>[] tab;
+        Node<K, V> first, e;
+        int n;
+        K k;
+        // 根据输入的hash值，可以直接计算出对应的下标，如果存在结果，则必定在table的这个位置上
+        if ((tab = table) != null && (n = tab.length) > 0 && (first = tab[(n - 1) & hash]) != null) {
+            // 判断第一个存在的节点的key是否和查询的key相等。如果相等，直接返回该节点
+            if (first.hash == hash && // always check first node
+                    ((k = first.key) == key || (key != null && key.equals(k))))
+                return first;
+            // 遍历该链表或红黑树直到next为null
+            if ((e = first.next) != null) {
+                // 为红黑树结构时，遍历红黑树节点，查看是否有匹配的TreeNode
+                if (first instanceof TreeNode)
+                    return ((TreeNode<K, V>) first).getTreeNode(hash, key);
+                do {
+                    // 为链表结构时，遍历链表，判断key是否相同
+                    if (e.hash == hash && ((k = e.key) == key || (key != null && key.equals(k))))
+                        return e;
+                } while ((e = e.next) != null);
+            }
+        }
+        return null;
+    }
 ```
 
 附上一张大佬博客的put方法流程图：
