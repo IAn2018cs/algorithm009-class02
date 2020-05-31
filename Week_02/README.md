@@ -59,7 +59,7 @@ Java中的`HashSet`内部是基于`HashMap`实现的，每次存的value是一�
         Node<K, V>[] tab;
         Node<K, V> p;
         int n, i;
-        // 如果当前表为空则进行初始化 默认初始大小为1 << 4 = 16，扩容因子：0.75f
+        // 如果当前表为空则进行初始化 默认初始大小为1 << 4 = 16，负载因子：0.75f
         if ((tab = table) == null || (n = tab.length) == 0)
             n = (tab = resize()).length;
         // 得到要插入的位置，为null说明没有冲突，直接插入
@@ -155,4 +155,129 @@ Java中的`HashSet`内部是基于`HashMap`实现的，每次存的value是一�
 ## 2 树、二叉树、二叉搜索树的实现与特性
 
 ### 2.1 树
+
+Linked List是一种特殊的树，每一层都只有一个子节点。
+
+![树](https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_02/pic/tree.png)
+
+### 2.2 二叉树
+
+![二叉树](https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_02/pic/binary-tree.png)
+
+二叉树的遍历：
+
+* 前序遍历：根 - 左 - 右
+* 中序遍历：左 - 根 - 右
+* 后序遍历：左 - 右 - 根
+
+一般树的遍历都使用递归来实现，示例代码：
+
+```java
+// 前序
+void preorder(Node root) {
+  if (root != null) {
+    System.out.println(root.val);
+    preorder(root.left);
+    preorder(root.right);
+  }
+}
+
+// 中序
+void inorder(Node root) {
+  if (root != null) {
+    inorder(root.left);
+    System.out.println(root.val);
+    inorder(root.right);
+  }
+}
+
+// 后序
+void postorder(Node root) {
+  if (root != null) {
+    postorder(root.left);
+    postorder(root.right);
+    System.out.println(root.val);
+  }
+}
+```
+
+### 2.3 二叉搜索树
+
+![二叉搜索树](https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_02/pic/binary-search-tree.png)
+
+二叉搜索树特性：
+
+* 左子树上所有节点值都小于根节点的值。
+* 右子树上所有节点值都大于根节点的值。
+* 中序遍历为升序排列
+* 查询、插入、删除时间复杂度都为O(log n)，退化成链表时最坏O(n)
+
+## 3 堆和二叉堆、图
+
+### 3.1 堆
+
+可以迅速找到一堆数中的最大值或最小值的数据结构。
+
+如果根节点的值最大叫大顶堆，根节点的值最小叫小顶堆。
+
+堆的实现有好多种，常见的二叉堆、斐波那契堆等。
+
+常见操作时间复杂度：
+
+* 查找最大/最小值：O(1)
+* 删除最大/最小值：O(log n)
+* 插入元素：O(log n)，最好情况O(1)
+
+### 3.2 二叉堆
+
+![二叉堆](https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_02/pic/binary-tree-heap.png)
+
+通过完全二叉树实现（不是二叉搜索树）。
+
+性质：
+
+* 是一颗完全树。
+* 树中任意节点的值总是大于等于子节点的值。
+
+实现：
+
+* 一般通过数组实现。
+* 假设第一个数组索引为0，父节点和子节点关系如下：
+  * i节点的左孩子索引为：2*i+1
+  * i节点的右孩子索引为：2*i+2
+  * i节点的父节点索引为：(i - 1) / 2 向下取整
+
+插入操作：
+
+1. 新元素插入到最后面
+2. 依次向上调整整个堆的结构，直到根节点
+
+删除最大值：
+
+1. 将最后面元素放到第一个位置
+2. 依次向下调整整个堆的结构，直到堆尾
+
+堆排序示例，这里推荐一个iOS应用：算法动画图解
+
+<video id="video" controls="" preload="none" poster="https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_02/pic/heap-sort.PNG">
+  <source id="mp4" src="https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_02/pic/heap-sort.MP4" type="video/mp4">  
+</video>
+
+### 3.3 图
+
+![图](https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_02/pic/graph.png)
+
+图的属性：
+
+* 点 V
+  * 入度 - 出度
+  * 点与点之间是否连通
+* 边 E
+  * 有向 - 无向
+  * 权重（边长）
+
+常见算法：
+
+* DFS 深度优先搜索
+* BFS 广度优先搜索
 
