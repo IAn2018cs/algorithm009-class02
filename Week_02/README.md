@@ -263,6 +263,8 @@ void postorder(Node root) {
   <source id="mp4" src="https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_02/pic/heap-sort.MP4" type="video/mp4">  
 </video>
 
+上面视频无法显示，可以看这里：https://www.bilibili.com/video/BV1HC4y1p7Jf/
+
 ### 3.3 图
 
 ![图](https://github.com/IAn2018cs/algorithm009-class02/blob/master/Week_02/pic/graph.png)
