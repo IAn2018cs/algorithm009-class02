@@ -147,7 +147,7 @@ Java中的是`PriorityQueue`，继承`AbstractQueue`，最终实现了`Queue`
 
 ### 6.1 用 add first 或 add last 这套新的 API 改写 Deque 的代码
 
-```
+```java
 Deque<String> deque = new LinkedList<>();
 
 // 双端队列 实现 队列 先进先出
@@ -190,7 +190,7 @@ System.out.println(deque);
 Java中的`Queue`是一个接口，继承了`Collection`接口
 
 主要方法有：
-```
+```java
 // 添加一个元素，添加失败会抛出异常 IllegalStateException
 boolean add(E e);
 
