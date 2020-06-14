@@ -149,13 +149,12 @@ int binarySearch(int[] nums, int target) {
 public int search(int[] nums) {
     int left = 0;
     int right = nums.length - 1;
-    while (left <= right) {
-        int mid = (left + right) / 2;
-        // 如果中间值比右边大 说明无序的地方在右半部分
-        if (nums[mid] > nums[right]) {
-            left = mid + 1;
+    while (left < right) {
+        int mid = (right - left) / 2 + left;
+        if (nums[mid] <= nums[right]) {
+            right = mid;
         } else {
-            right = mid - 1;
+            left = mid + 1;
         }
     }
     return left;
