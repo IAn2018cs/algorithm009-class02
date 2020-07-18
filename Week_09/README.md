@@ -106,5 +106,17 @@ public int uniquePathsWithObstacles(int[][] obstacleGrid) {
 * 状态拥有更多的维度（二维、三维、或更多，有时候还有考虑压缩）。
 * 状态方程更加复杂。
 
+## 2. 字符串算法
 
+字符串匹配算法：
+
+1. BF算法（暴力匹配算法，也叫朴素匹配算法）
+
+2. RK算法（Rabin-Karp算法）
+
+   在BF算法上进行优化，通过哈希算法对主串中的子串分别求哈希值，然后逐个与主串中的哈希值比较大小。因为哈希值是一个数字，数字之间的比较是否相等是非常快的。
+
+3. KMP算法（Knuth-Morris-Pratt算法）
+
+4. BM算法（Boyer-Moore算法）
 
